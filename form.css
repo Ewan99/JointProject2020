@@ -1,0 +1,59 @@
+:required
+	{
+		border:2px solid red;
+	}
+input
+	{
+		font-family:"Helvetica Neue",Helvetica,Arial,sans-serrif;
+		border:1px solid silver;
+		font-size:30px;
+		min-height:30px;
+		display:block;
+		margin-bottom:15px;
+		margin-top:5px;
+		width: 350px;
+	}
+div.myButton
+	{
+		font-weight:bold;
+		background-color:none;
+		width: 300px;
+	}
+
+div.container
+	{
+		height:810px;
+		display: block;
+		margin:auto;
+		width: 600px;
+		font-weight:bold;
+		border:3px solid black;
+		background-color:white;
+	}
+
+body
+  	{
+  		background-color:#ccf1ff;
+  	}
+
+h2
+	{
+		font-family:"Helvetica";
+		font-size:50px;
+		margin: auto;
+		width: 100%;
+		text-align:center;
+		background-color:#dfdfdf;
+	}
+
+h4
+	{
+		font-family:"Helvetica";
+		font-size:20px;
+		margin: auto;
+		width: 100%;
+		text-align:center;
+		color:red;
+		background-color:#dfdfdf;
+		border-bottom:3px solid black;
+	}

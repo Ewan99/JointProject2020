@@ -5,39 +5,48 @@
 		<link rel="stylesheet" type="text/css" href="form.css">
 	</head>
 	<body>
+
 		<div class = "container">
 		<form>
-		<h2>Student Form</h2>
-		<h4>Fields in red are required</h4><br>
-	<div class="inputbox"><label for="FirstName">First Name: </label>
-	<input title="Name must only contain alphabetic characters" type="text" name="name" required id="Name" pattern="[a-zA-Z|\s|.]+"/> </div>
 
-	<div class="inputbox"><label for="LastName">Last Name: </label>
-	<input title="Name must only contain alphabetic characters" type="text" name="name" required id="Name" pattern="[a-zA-Z|\s|.]+"/> </div>
+		<h2>Medical Logon Form</h2>
+		<h4>Welcome! Please fill in the following fields to confirm your appointment<br><br> NOTE: All fields required</h4><br>
 
-	<div class="inputbox"><label for="Address">Address: </label>
-	<input title="Address must only contain the following: 'a-Z' , '-' , '0-9' , '.' , ',' )" type="text" name="address" id="Address" pattern="[a-zA-Z|,|\s|.|0-9]+"/> </div>
+		<div class="inputbox"><label for="FirstName">First Name: </label>
+		<input title="Name must only contain alphabetic characters" type="text" name="name" required id="Name" pattern="[a-zA-Z|\s|.]+"/> </div>
 
-	<div class="inputbox"><label for="PPSNum">PPS Number: </label>
-	<input type="text" title="Must contain 7 digits followed by one or two characters" name="ppsNum" required id="PPSNum" pattern="(\d{7})([A-Z]{1,2})"/> </div>
+		<div class="inputbox"><label for="LastName">Last Name: </label>
+		<input title="Name must only contain alphabetic characters" type="text" name="name" required id="Name" pattern="[a-zA-Z|\s|.]+"/> </div>
 
-	<div class="inputbox"><label for="PhoneNum">Phone Number: </label>
-	<input title="Valid Formats : (087) 1234567 OR 087- 1234567" type="tel" name="phoneNum" id="PhoneNum" pattern="(^\s*\(?\s*\d{1,4}\s*\)|(\d{1,4}[\-]*))?\s*[\d\s]{5,10}\s*$"/> </div>
+		<div class="inputbox"><label for="Address">Address: </label>
+		<input title="Address must only contain the following: 'a-Z' , '-' , '0-9' , '.' , ',' )" type="text" name="address" required id="Address" pattern="[a-zA-Z|,|\s|.|0-9]+"/> </div>
 
-	<div class="inputbox"><label for="Email">Email Address: </label>
-	<input type="email" name="email" required id="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" /> </div>
+		<div class="inputbox"><label for="DateOfBirth">Date of Birth: </label>
+		<input type="date" name="dateofBirth" required id="DateOfBirth" oninput="checkAge(DateOfBirth)" /> </div>
 
-	<div class="inputbox"><label for="VerifyEmail">Confirm Email: </label>
-	<input type="email" name="verifyEmail" required id="VerifyEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" oninput="checkEmail(VerifyEmail)" /> </div>
 
-	<div class="inputbox"><label for="DateOfBirth">Date of Birth: </label>
-	<input type="date" name="dateofBirth" required id="DateOfBirth" oninput="checkAge(DateOfBirth)" /> </div>
-	<br>
-	<!-- Submit button -->
-	<div class="myButton">
-	<input type="submit" value="Submit Form" name="submit" />
-	</div>
-</form>
-</div>
+		<div class="inputbox"><label for="PPSNum">PPS Number: </label>
+		<input type="text" title="Must contain 7 digits followed by one or two characters" name="ppsNum" required id="PPSNum" pattern="(\d{7})([A-Z]{1,2})"/> </div>
+
+		<div class="inputbox"><label for="PhoneNum">Phone Number: </label>
+		<input title="Valid Formats : (087) 1234567 OR 087- 1234567" type="tel" name="phoneNum" required id="PhoneNum" pattern="(^\s*\(?\s*\d{1,4}\s*\)|(\d{1,4}[\-]*))?\s*[\d\s]{5,10}\s*$"/> </div>
+
+		<div class="inputbox"><label for="Email">Email Address: </label>
+		<input type="email" name="email" required id="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" /> </div>
+
+		<div class="inputbox"><label for="VerifyEmail">Confirm Email: </label>
+		<input type="email" name="verifyEmail" required id="VerifyEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" oninput="checkEmail(VerifyEmail)" /> </div>
+		<br>
+
+		<!-- Submit button -->
+		<div class="myButton">
+		<input type="submit" value="Submit Form" name="submit" />
+		</div>
+
+		<h5>Disclaimer: All data is handled and stored in complaince with current data protection laws
+		</form>
+		</div>
+
 	</body>
+
 </html>

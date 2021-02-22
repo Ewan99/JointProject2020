@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title> COVID-19 Medical Checklist </title>
-		<script> type="text/javascript" src="form.js" </script>
+		
 		<link rel="stylesheet" type="text/css" href="form.css">
 	</head>
 	<body>
@@ -23,7 +23,6 @@
 
 		<div class="inputbox"><label for="DateOfBirth">Date of Birth: </label>
 		<input type="date" name="dateofBirth" required id="DateOfBirth" oninput="checkAge(DateOfBirth)" /> </div>
-
 
 		<div class="inputbox"><label for="PPSNum">PPS Number: </label>
 		<input type="text" title="Must contain 7 digits followed by one or two characters" name="ppsNum" required id="PPSNum" pattern="(\d{7})([A-Z]{1,2})"/> </div>

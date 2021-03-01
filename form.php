@@ -46,19 +46,19 @@ if (!$conn->query($sql) === TRUE)
 ?>
 <html>
   <head>
+    <title>Medical Check-in - Registration</title>
     <link rel="stylesheet" type="text/css" href="form.css">
     </style>
 
     <script>
     function checkEmail(input)
     {
-    	if(input.value != document.getElementById('Email').value) // Comparison statement
+    	if(input.value != document.getElementById('Email').value)
     		{
     			input.setCustomValidity('The two email addresses must match!');
     		}
     	else
     		{
-    			//Input is valid -- reset error message
     			input.setCustomValidity('');
     		}
     }

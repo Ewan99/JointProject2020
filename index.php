@@ -1,11 +1,12 @@
 <html>
 <head>
+<title>Medical Check-in - Home</title>
 <link rel="stylesheet" type="text/css" href="index.css">
 </style>
 </head>
 
 <body>
-<<?php
+<?php
 
 $host = 'localhost';
 $username = 'root';
@@ -56,32 +57,30 @@ if (isset($_POST['validate']))
 	$sql = "SELECT `Client No.`, `PPSN`, `iv` FROM clients";
 	$result = $conn->query($sql);
 	$found = "false";
+
 	if ($result->num_rows > 0)
 	{
-	  echo '<table><tr><th>ID</th><th>Content</th></tr>';
 	  while($row = $result->fetch_assoc())
 		{
-			if($found = false)
-			{
 				$clientno = $row['Client No.'];
 		    $ppsn_hex = hex2bin($row['PPSN']);
 		    $iv = hex2bin($row['iv']);
 		    $ppsn = openssl_decrypt($ppsn_hex, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-		    echo "<tr><td>$clientno</td><td>$ppsn</td></tr>";
 				if($ppsn == $_POST['medNum'])
 				{
-					echo "MATCH";
 					$found = "true";
 				}
-			}
-		}
-		if($found = "false")
-		{
-			 echo '<p>Error! Profile not found...  Have you registered Before? If so, please check your PPS Number again.</p>';
 		}
 	}
 
-	echo '</table>';
+  if($found == "false")
+  {
+     echo '<p style="font-size:25px;color:red;padding-left:450px;">Error! Profile not found...  Have you registered Before? If so, please check your PPS Number again.</p>';
+  }
+  else
+  {
+      header("Location: /jp/checkin.php");
+  }
 }
 ?>
 

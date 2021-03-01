@@ -3,53 +3,39 @@
 		border:2px solid red;
 	}
 
-label
-{
-	padding-left:50px;
-	font-size:20px;
-}
-
-p
-{
-	font-size:30px;
-}
-
 input
 	{
-		font-family:"Helvetica Neue",Helvetica,Arial,sans-serrif;
 		border:1px solid silver;
-		font-size:30px;
-		min-height:30px;
+		font-size:40px;
 		display:block;
 		margin:auto;
-		margin-bottom:15px;
-		margin-top:5px;
+		margin-bottom:20px;
 		width: 350px;
 	}
-div.myButton
+
+	label
 	{
-		font-weight:bold;
-		background-color:none;
-		width: 300px;
-		padding-left:20%;
+		padding-left:50px;
+		font-size:20px;
 	}
 
 div.container
 	{
-		height:850px;
+
+		height:650px;
 		display: block;
 		margin:auto;
-		width: 700px;
+		width: 600px;
 		font-weight:bold;
-		border:3px solid black;
+		border:5px solid black;
 		background-color:white;
 	}
 
 body
-  	{
-			margin-top:5vh;
-  		background-color:#ccf1ff;
-  	}
+  {
+  	background-color:#ccf1ff;
+		margin-top:5%;
+  }
 
 h2
 	{

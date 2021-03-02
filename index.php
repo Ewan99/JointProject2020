@@ -7,6 +7,7 @@
 
 <body>
 <?php
+session_start();
 
 $host = 'localhost';
 $username = 'root';
@@ -69,6 +70,8 @@ if (isset($_POST['validate']))
 				if($ppsn == $_POST['medNum'])
 				{
 					$found = "true";
+          $_SESSION['ppsnum'] = $ppsn;
+          $_SESSION['clientnum'] = $clientno;
 				}
 		}
 	}
@@ -79,26 +82,28 @@ if (isset($_POST['validate']))
   }
   else
   {
+    $_SESSION['ppsno.'] = $_POST['medNum'];
       header("Location: /jp/checkin.php");
   }
 }
 ?>
 
 <div class = "container">
-	<form>
+	<form method="POST" action="">
 		<h2>Medical Check-in</h2>
-		<h4>Welcome! Please check-in with a questionnare before your appointment</h4><br>
+		<h4>Welcome! Please check-in along with a COVID questionnare before your appointment</h4><br>
 
 	 	<div class="inputbox"><label for="MedNum">Medical Card Number:</label>
 			 <input type="text" title="Must contain 7 digits followed by one or two characters" name="medNum" required id="MedNum" pattern="(\d{7})([A-Z]{1,2})"/>
 	 	</div>
 
 		<input type="submit" formmethod="post" value="Log-in" name="validate" />
+  </form>
 
-		<br><br>
-		<h3 style="padding-left:32%;">New user? Register below...</h3>
-		<input type="button" value="Register Profile" onclick="location.href='form.php';" />
-	</form>
+	<br><br>
+	<h3 style="padding-left:32%;">New user? Register below...</h3>
+	<input type="button" value="Register Profile" onclick="location.href='form.php';" />
+
 </div>
 
 </body>

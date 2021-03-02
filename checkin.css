@@ -1,0 +1,109 @@
+:required
+	{
+		border:2px solid red;
+	}
+
+input
+	{
+		border:1px solid silver;
+		font-size:40px;
+	}
+
+  input.submit
+  {
+    border:1px solid silver;
+		font-size:40px;
+		display:block;
+		margin:auto;
+		margin-bottom:20px;
+		width: 350px;
+  }
+
+  input[type=radio] {
+    border: 0px;
+    width: 4%;
+    height: 2em;
+}
+
+	label
+	{
+		padding-left:50px;
+		font-size:20px;
+	}
+
+div.container
+	{
+
+		height:1850px;
+		display: block;
+		margin:auto;
+		width: 800px;
+		font-weight:bold;
+		border:5px solid black;
+		background-color:white;
+	}
+
+body
+  {
+  	background-color:#ccf1ff;
+		margin-top:5%;
+  }
+
+h2
+	{
+    padding-top:5px;
+    padding-bottom:5px;
+		font-family:"Helvetica";
+		font-size:50px;
+		margin: auto;
+		width: 100%;
+		text-align:center;
+		background-color:#dfdfdf;
+    border-bottom:3px solid black;
+	}
+
+h4.header
+	{
+    padding-top:5px;
+		font-family:"Helvetica";
+		font-size:20px;
+		margin: auto;
+		width: 100%;
+		text-align:center;
+		color:red;
+		background-color:#dfdfdf;
+		border-bottom:3px solid black;
+	}
+
+  #quiz input
+  {
+      vertical-align: middle;
+  }
+
+  #quiz ol
+  {
+     margin: 0 0 10px 20px;
+  }
+
+  #quiz ol li
+  {
+     margin: 0 0 20px 0;
+  }
+
+  #quiz ol li div
+  {
+     padding: 4px 0;
+  }
+
+  #quiz h3
+  {
+    font-family:"Helvetica";
+    font-size:20px;
+    margin: 0 0 1px 0;
+  }
+
+  #quiz h4
+  {
+    font-family:"Helvetica";
+    margin: 0 0 1px 0;
+  }

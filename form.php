@@ -37,6 +37,7 @@ $sql = ' CREATE TABLE IF NOT EXISTS `clients`
   `iv` varchar(250),
    PRIMARY KEY  (`Client No.`)
   ); ';
+
 if (!$conn->query($sql) === TRUE)
 {
   die('Error creating database: ' . $conn->error);
@@ -97,16 +98,19 @@ if (!$conn->query($sql) === TRUE)
       $enc_email = openssl_encrypt($enc_email, $cipher, $key, OPENSSL_RAW_DATA, $iv);
       $email_hex = bin2hex($enc_email);
 
+      $enc_passwd = $conn -> real_escape_string($_POST['passwd']);
+      $enc_passwd = openssl_encrypt($enc_passwd, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+      $passwd_hex = bin2hex($enc_passwd);
+
       $enc_dob = $conn -> real_escape_string($_POST['dateofBirth']);
       $enc_dob = openssl_encrypt($enc_dob, $cipher, $key, OPENSSL_RAW_DATA, $iv);
       $dob_hex = bin2hex($enc_dob);
 
       $iv_hex = bin2hex($iv);
-      $sql = "INSERT INTO clients (`Client No.`, `First Name`, `Last Name`, `Address`, `PPSN`, `Phone`, `Email`, `DOB`, `iv`) VALUES (NULL, '$fname_hex', '$lname_hex', '$address_hex', '$ppsn_hex', '$phone_hex', '$email_hex', '$dob_hex', '$iv_hex')";
+      $sql = "INSERT INTO clients (`Client No.`, `First Name`, `Last Name`, `Address`, `PPSN`, `Phone`, `Email`, `Password`, `DOB`, `iv`) VALUES (NULL, '$fname_hex', '$lname_hex', '$address_hex', '$ppsn_hex', '$phone_hex', '$email_hex', '$passwd_hex', '$dob_hex', '$iv_hex')";
       if ($conn->query($sql) === TRUE)
       {
-        header("Location: /jp");
-        die('Profile created successfully! You will now return to the main page');
+        echo ('<script>alert("Profile created successfully! You will now return to the main page");document.location="index.php"</script>');
       }
       else
       {
@@ -144,6 +148,10 @@ if (!$conn->query($sql) === TRUE)
   	    <div class="inputbox"><label for="Email">Email Address:</label>
   	       <input type="email" name="email" required id="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
         </div>
+
+        <div class="inputbox"><label for="Password">Password:</label>
+           <input type="text" name="passwd" required id="passwd" />
+       </div>
 
   	    <div class="inputbox"><label for="VerifyEmail">Confirm Email:</label>
   	       <input type="email" name="verifyEmail" required id="VerifyEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" oninput=checkEmail(VerifyEmail) />

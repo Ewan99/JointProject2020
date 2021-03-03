@@ -32,12 +32,13 @@ if (!$conn->query($sql) === TRUE)
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
   `PPSN` varchar(8),
-  `q1` varchar(250),
-  `q2` varchar(250),
-  `q3` varchar(250),
-  `q4` varchar(250),
-  `q5` varchar(250),
-  `q6` varchar(250),
+  `fever` varchar(250),
+  `aches/pains` varchar(250),
+  `cough` varchar(250),
+  `breathing` varchar(250),
+  `smell/taste` varchar(250),
+  `fatique` varchar(250),
+  `locations` varchar(250),
   `iv` varchar(250),
    PRIMARY KEY  (`PPSN`)
   ); ';
@@ -67,6 +68,7 @@ if (isset($_POST['validate']))
   $ans4 = $_POST['q4'];
   $ans5 = $_POST['q5'];
   $ans6 = $_POST['q6'];
+  $ans7 = $_POST['q7'];
 
   $totalCorrect = 0;
 
@@ -119,16 +121,24 @@ if (isset($_POST['validate']))
 
     $q6 = $conn -> real_escape_string($_POST['q6']);
 
+    $enc_q7 = openssl_encrypt($q7, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+    $q7_hex = bin2hex($enc_q7);
+
     $iv_hex = bin2hex($iv);
-    $sql = "INSERT INTO quizresults (`PPSN`, `q1`, `q2`, `q3`, `q4`, `q5`, `q6`, `iv`) VALUES ('$ppsn_hex', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$iv_hex')";
+    $sql = "INSERT INTO quizresults (`PPSN`, `fever`, `aches/pains`, `cough`, `breathing`, `smell/taste`, `fatigue`, `locations` `iv`) VALUES ('$ppsn_hex', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$iv_hex')";
     if ($conn->query($sql) === TRUE)
     {
-      die('Warning: Abnormal symtpoms detected!  Please return home IMMEDIATELY.  Your results have been uploaded...');
+      echo('<p style="font-size:25px;color:red;padding-left:370px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY.  Your results have been uploaded for contact tracing purposes...</p>');
+      echo('<br><br><br><br><br><br>');
     }
     else
     {
-      die('Warning: Abnormal symtpoms detected!  Please return home IMMEDIATELY.  However, an error prevented the upload of your results...   Error: ' . $conn->error);
+      echo('<p style="font-size:25px;color:red;padding-left:400px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY.  However, an error prevented the upload of your results...   Error: </p>' . $conn->error);
     }
+  }
+  else
+  {
+    echo ('<script>alert("You are not showing significant signs of COVID-19.  Your appointment has been confirmed");document.location="index.php"</script>');
   }
 }
 ?>
@@ -143,11 +153,11 @@ if (isset($_POST['validate']))
 <body>
 
   <div class = "container">
-  	<form method="POST" action="" id="quiz">
+  	<form method="POST" action="" id="quiz" required>
   		<h2>COVID Symptoms Check List</h2>
   		<h4 class="header">Welcome <?php echo($fname);?>!
         <br><br> Please complete the following COVID Check-list before your appointment
-        <br> Please note:  These results WILL be kept on record</h4>
+        <br><br>Please note:  These results and your personal details WILL be kept on record for contact tracing purposes if deemed necessary</h4>
         <br>
       <ol>
         <h3> Within the last 14 days... </h3><br><br>
@@ -167,7 +177,7 @@ if (isset($_POST['validate']))
 
           <li>
               <h3>Have you experienced any <span style="color:red">aches/pains</span>? and/or <span style="color:red">headaches</span>?</h3>
-              <h4> - This can include notable muscular pain, difficulty when moving body</h4>
+              <h4> - This can include notable muscular pain, difficulty when moving any parts of your body</h4>
               <div>
                   <label for="q2-Yes"> Yes </label>
                   <input type="radio" name="q2" id="q2-Yes" value="Yes" />
@@ -232,6 +242,20 @@ if (isset($_POST['validate']))
               <div>
                   <label for="q6-No"> No </label>
                   <input type="radio" name="q6" id="q6-No" value="No" />
+              </div>
+          </li>
+
+          <li>
+              <h3>Have you <span style="color:red">travelled</span> anywhere?</h3>
+              <h4> - If so, please give location details</h4>
+              <div>
+                  <label for="q7-Yes"> Yes, </label>
+                  <input type="text" name="q7" id="q7-Yes"/>
+              </div>
+
+              <div>
+                  <label for="q7-No"> No </label>
+                  <input type="radio" name="q7" id="q7-No" value="No" />
               </div>
           </li>
       </ol>

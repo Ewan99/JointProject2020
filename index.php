@@ -7,7 +7,10 @@
 
 <body>
 <?php
+$SESSION_lifetime = 86400;
+
 session_start();
+
 
 $host = 'localhost';
 $username = 'root';
@@ -37,14 +40,15 @@ if (!$conn->query($sql) === TRUE)
 $sql = ' CREATE TABLE IF NOT EXISTS `clients`
   (
   `Client No.` int(8) NOT NULL auto_increment,
-  `First Name` varchar(250)  NOT NULL default "",
-  `Last Name` varchar(250)  NOT NULL default "",
-  `Address` varchar(250)  NOT NULL default "",
-  `PPSN` varchar(250),
-  `Phone`  varchar(250),
-  `Email` varchar(250)  NOT NULL default "",
-  `DOB`varchar(250),
-  `iv` varchar(250),
+  `First Name` varchar(250)  NOT NULL,
+  `Last Name` varchar(250)  NOT NULL,
+  `Address` varchar(250)  NOT NULL,
+  `PPSN` varchar(250)  NOT NULL,
+  `Phone`  varchar(250)  NOT NULL,
+  `Email` varchar(250)  NOT NULL,
+  `Password` varchar(250)  NOT NULL,
+  `DOB` varchar(250)  NOT NULL,
+  `iv` varchar(250)  NOT NULL,
    PRIMARY KEY  (`Client No.`)
   ); ';
 if (!$conn->query($sql) === TRUE)
@@ -55,35 +59,36 @@ if (!$conn->query($sql) === TRUE)
 
 if (isset($_POST['validate']))
 {
-	$sql = "SELECT `Client No.`, `PPSN`, `iv` FROM clients";
+	$sql = "SELECT `Client No.`, `PPSN`, `Password`, `iv` FROM clients";
 	$result = $conn->query($sql);
 	$found = "false";
-
 	if ($result->num_rows > 0)
 	{
 	  while($row = $result->fetch_assoc())
 		{
-				$clientno = $row['Client No.'];
-		    $ppsn_hex = hex2bin($row['PPSN']);
-		    $iv = hex2bin($row['iv']);
-		    $ppsn = openssl_decrypt($ppsn_hex, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+        $iv = hex2bin($row['iv']);
+		    $ppsn = hex2bin($row['PPSN']);
+		    $ppsn = openssl_decrypt($ppsn, $cipher, $key, OPENSSL_RAW_DATA, $iv);
 				if($ppsn == $_POST['medNum'])
 				{
 					$found = "true";
+          $clientno = $row['Client No.'];
+          $passwd = hex2bin($row['Password']);
+          $passwd = openssl_decrypt($passwd, $cipher, $key, OPENSSL_RAW_DATA, $iv);
           $_SESSION['ppsnum'] = $ppsn;
           $_SESSION['clientnum'] = $clientno;
 				}
 		}
 	}
 
-  if($found == "false")
+  if($found == "false" || $passwd != $_POST['attempt'])
   {
-     echo '<p style="font-size:25px;color:red;padding-left:450px;">Error! Profile not found...  Have you registered Before? If so, please check your PPS Number again.</p>';
+     echo '<p style="font-size:25px;color:red;padding-left:44%;">Error! Incorrect Details</p>';
   }
   else
   {
     $_SESSION['ppsno.'] = $_POST['medNum'];
-      header("Location: /jp/checkin.php");
+      header("Location: checkin.php");
   }
 }
 ?>
@@ -96,6 +101,10 @@ if (isset($_POST['validate']))
 	 	<div class="inputbox"><label for="MedNum">Medical Card Number:</label>
 			 <input type="text" title="Must contain 7 digits followed by one or two characters" name="medNum" required id="MedNum" pattern="(\d{7})([A-Z]{1,2})"/>
 	 	</div>
+
+    <div class="inputbox"><label for="attempt">Password:</label>
+       <input type="text" name="attempt" required id="attempt" />
+   </div>
 
 		<input type="submit" formmethod="post" value="Log-in" name="validate" />
   </form>

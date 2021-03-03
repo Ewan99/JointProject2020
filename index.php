@@ -1,11 +1,3 @@
-<html>
-<head>
-<title>Medical Check-in - Home</title>
-<link rel="stylesheet" type="text/css" href="index.css">
-</style>
-</head>
-
-<body>
 <?php
 $SESSION_lifetime = 86400;
 
@@ -51,13 +43,34 @@ $sql = ' CREATE TABLE IF NOT EXISTS `clients`
   `iv` varchar(250)  NOT NULL,
    PRIMARY KEY  (`Client No.`)
   ); ';
+
 if (!$conn->query($sql) === TRUE)
 {
-  die('Error creating database: ' . $conn->error);
+  die('Error creating clients database: ' . $conn->error);
+}
+
+$sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
+  (
+  `Client No.` int(8) NOT NULL,
+  `fever` varchar(250),
+  `aches/pains` varchar(250),
+  `cough` varchar(250),
+  `breathing` varchar(250),
+  `smell/taste` varchar(250),
+  `fatigue` varchar(250),
+  `locations` varchar(250),
+  `doctor` varchar(250),
+  `iv` varchar(250),
+   PRIMARY KEY  (`Client No.`)
+  ); ';
+
+if (!$conn->query($sql) === TRUE)
+{
+  die('Error creating quizresults database: ' . $conn->error);
 }
 
 
-if (isset($_POST['validate']))
+if (isset($_POST['validate']) || isset($_POST['view']))
 {
 	$sql = "SELECT `Client No.`, `PPSN`, `Password`, `iv` FROM clients";
 	$result = $conn->query($sql);
@@ -88,17 +101,32 @@ if (isset($_POST['validate']))
   else
   {
     $_SESSION['ppsno.'] = $_POST['medNum'];
+    if (isset($_POST['validate']))
+    {
       header("Location: checkin.php");
+    }
+    else if (isset($_POST['view']))
+    {
+      header("Location: view.php");
+    }
   }
 }
 ?>
 
+<html>
+<head>
+<title>Medical Check-in - Home</title>
+<link rel="stylesheet" type="text/css" href="index.css">
+</style>
+</head>
+
+<body>
 <div class = "container">
 	<form method="POST" action="">
 		<h2>Medical Check-in</h2>
 		<h4>Welcome! Please check-in along with a COVID questionnare before your appointment</h4><br>
 
-	 	<div class="inputbox"><label for="MedNum">Medical Card Number:</label>
+	 	<div class="inputbox"><label for="MedNum">PPS Number:</label>
 			 <input type="text" title="Must contain 7 digits followed by one or two characters" name="medNum" required id="MedNum" pattern="(\d{7})([A-Z]{1,2})"/>
 	 	</div>
 
@@ -106,7 +134,8 @@ if (isset($_POST['validate']))
        <input type="text" name="attempt" required id="attempt" />
    </div>
 
-		<input type="submit" formmethod="post" value="Log-in" name="validate" />
+		<input type="submit" formmethod="post" value="Check-in" name="validate" />
+    <input type="submit" formmethod="post" value="View Profile" name="view" />
   </form>
 
 	<br><br>

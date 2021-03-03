@@ -29,23 +29,44 @@ if (!$conn->query($sql) === TRUE)
   die('Error using database: ' . $conn->error);
 }
 
+$sql = ' CREATE TABLE IF NOT EXISTS `clients`
+  (
+  `Client No.` int(8) NOT NULL auto_increment,
+  `First Name` varchar(250)  NOT NULL,
+  `Last Name` varchar(250)  NOT NULL,
+  `Address` varchar(250)  NOT NULL,
+  `PPSN` varchar(250)  NOT NULL,
+  `Phone`  varchar(250)  NOT NULL,
+  `Email` varchar(250)  NOT NULL,
+  `Password` varchar(250)  NOT NULL,
+  `DOB` varchar(250)  NOT NULL,
+  `iv` varchar(250)  NOT NULL,
+   PRIMARY KEY  (`Client No.`)
+  ); ';
+
+if (!$conn->query($sql) === TRUE)
+{
+  die('Error creating clients database: ' . $conn->error);
+}
+
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
-  `PPSN` varchar(8),
+  `Client No.` int(8) NOT NULL,
   `fever` varchar(250),
   `aches/pains` varchar(250),
   `cough` varchar(250),
   `breathing` varchar(250),
   `smell/taste` varchar(250),
-  `fatique` varchar(250),
+  `fatigue` varchar(250),
   `locations` varchar(250),
+  `doctor` varchar(250),
   `iv` varchar(250),
-   PRIMARY KEY  (`PPSN`)
+   PRIMARY KEY  (`Client No.`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
 {
-  die('Error creating database: ' . $conn->error);
+  die('Error creating quizresults database: ' . $conn->error);
 }
 
 $sql = "SELECT `Client No.`,`First Name`, `PPSN`, `iv` FROM clients WHERE `Client No.` = $clientno";
@@ -68,7 +89,6 @@ if (isset($_POST['validate']))
   $ans4 = $_POST['q4'];
   $ans5 = $_POST['q5'];
   $ans6 = $_POST['q6'];
-  $ans7 = $_POST['q7'];
 
   $totalCorrect = 0;
 
@@ -106,9 +126,6 @@ if (isset($_POST['validate']))
   {
     $iv = random_bytes(16);
 
-    $enc_ppsn = openssl_encrypt($ppsn, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-    $ppsn_hex = bin2hex($enc_ppsn);
-
     $q1 = $conn -> real_escape_string($_POST['q1']);
 
     $q2 = $conn -> real_escape_string($_POST['q2']);
@@ -121,11 +138,18 @@ if (isset($_POST['validate']))
 
     $q6 = $conn -> real_escape_string($_POST['q6']);
 
+    $q7 = $conn -> real_escape_string($_POST['q7']);
+
+    $q8 = $conn -> real_escape_string($_POST['q8']);
+
     $enc_q7 = openssl_encrypt($q7, $cipher, $key, OPENSSL_RAW_DATA, $iv);
     $q7_hex = bin2hex($enc_q7);
 
+    $enc_q8 = openssl_encrypt($q8, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+    $q8_hex = bin2hex($enc_q8);
+
     $iv_hex = bin2hex($iv);
-    $sql = "INSERT INTO quizresults (`PPSN`, `fever`, `aches/pains`, `cough`, `breathing`, `smell/taste`, `fatigue`, `locations` `iv`) VALUES ('$ppsn_hex', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$iv_hex')";
+    $sql = "INSERT INTO quizresults (`Client No.`, `fever`, `aches/pains`, `cough`, `breathing`, `smell/taste`, `fatigue`, `locations`, `doctor`, `iv`) VALUES ('$id', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$q7_hex', '$q8_hex', '$iv_hex')";
     if ($conn->query($sql) === TRUE)
     {
       echo('<p style="font-size:25px;color:red;padding-left:370px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY.  Your results have been uploaded for contact tracing purposes...</p>');
@@ -133,12 +157,13 @@ if (isset($_POST['validate']))
     }
     else
     {
-      echo('<p style="font-size:25px;color:red;padding-left:400px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY.  However, an error prevented the upload of your results...   Error: </p>' . $conn->error);
+      echo('<p style="font-size:25px;color:red;padding-left:400px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY, isolate from all other people, and book an appointment to a COVID Testing Center as soon as possible.  However, an error prevented the upload of your results...   Error: </p>' . $conn->error);
     }
   }
   else
   {
     echo ('<script>alert("You are not showing significant signs of COVID-19.  Your appointment has been confirmed");document.location="index.php"</script>');
+
   }
 }
 ?>
@@ -151,7 +176,7 @@ if (isset($_POST['validate']))
 </head>
 
 <body>
-
+<input style="margin-left:47%" type="button" value="Home" onclick="location.href='index.php';" />
   <div class = "container">
   	<form method="POST" action="" id="quiz" required>
   		<h2>COVID Symptoms Check List</h2>
@@ -258,6 +283,16 @@ if (isset($_POST['validate']))
                   <input type="radio" name="q7" id="q7-No" value="No" />
               </div>
           </li>
+          <li>
+              <h3>Select the doctor you booked your appointment for</h3>
+              <label for="q8">Doctor:</label>
+              <select id="q8" name="q8" form="quiz">
+                <option value="Dr. Maloney">Dr. Maloney</option>
+                <option value="Dr. Duff">Dr. Duff</option>
+                <option value="Dr. Bryant">Dr. Bryant</option>
+                <option value="Dr. Hudziak">Dr. Hudziak</option>
+              </select>
+
       </ol>
   		<input class = "submit" type="submit" formmethod="post" value="Submit" name="validate" />
     </form>

@@ -27,20 +27,40 @@ if (!$conn->query($sql) === TRUE)
 $sql = ' CREATE TABLE IF NOT EXISTS `clients`
   (
   `Client No.` int(8) NOT NULL auto_increment,
-  `First Name` varchar(250)  NOT NULL default "",
-  `Last Name` varchar(250)  NOT NULL default "",
-  `Address` varchar(250)  NOT NULL default "",
-  `PPSN` varchar(250),
-  `Phone`  varchar(250),
-  `Email` varchar(250)  NOT NULL default "",
-  `DOB`varchar(250),
+  `First Name` varchar(250)  NOT NULL,
+  `Last Name` varchar(250)  NOT NULL,
+  `Address` varchar(250)  NOT NULL,
+  `PPSN` varchar(250)  NOT NULL,
+  `Phone`  varchar(250)  NOT NULL,
+  `Email` varchar(250)  NOT NULL,
+  `Password` varchar(250)  NOT NULL,
+  `DOB` varchar(250)  NOT NULL,
+  `iv` varchar(250)  NOT NULL,
+   PRIMARY KEY  (`Client No.`)
+  ); ';
+if (!$conn->query($sql) === TRUE)
+{
+  die('Error creating clients database: ' . $conn->error);
+}
+
+$sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
+  (
+  `Client No.` int(8) NOT NULL,
+  `fever` varchar(250),
+  `aches/pains` varchar(250),
+  `cough` varchar(250),
+  `breathing` varchar(250),
+  `smell/taste` varchar(250),
+  `fatigue` varchar(250),
+  `locations` varchar(250),
+  `doctor` varchar(250),
   `iv` varchar(250),
    PRIMARY KEY  (`Client No.`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
 {
-  die('Error creating database: ' . $conn->error);
+  die('Error creating quizresults database: ' . $conn->error);
 }
 
 
@@ -119,7 +139,7 @@ if (!$conn->query($sql) === TRUE)
 
     }
     ?>
-
+    <input class="myButton" type="button" value="Home" onclick="location.href='index.php';" />
     <div class = "container">
 
       <form>
@@ -137,7 +157,7 @@ if (!$conn->query($sql) === TRUE)
   	        <input title="Address must only contain the following: a-Z , - , 0-9 , . , , )" type="text" name="address" required id="Address" pattern="[a-zA-Z|,|\s|.|0-9]+"/>
         </div>
 
-  	     <div class="inputbox"><label for="MedNum">Medical Card Number:</label>
+  	     <div class="inputbox"><label for="MedNum">PPS Number:</label>
   	        <input type="text" title="Must contain 7 digits followed by one or two characters" name="medNum" required id="MedNum" pattern="(\d{7})([A-Z]{1,2})"/>
         </div>
 

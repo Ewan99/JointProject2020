@@ -95,6 +95,7 @@ if (!$conn->query($sql) === TRUE)
     if (isset($_POST['new-record'])) {
       $found = "False";
       $iv = random_bytes(16);
+      $iv_hex = bin2hex($iv);
 
       $enc_fname = $conn -> real_escape_string($_POST['firstname']);
       $enc_fname = openssl_encrypt($enc_fname, $cipher, $key, OPENSSL_RAW_DATA, $iv);
@@ -160,7 +161,6 @@ if (!$conn->query($sql) === TRUE)
         else
         {
             $sql = "INSERT INTO clients (`Client No.`, `First Name`, `Last Name`, `Address`, `PPSN`, `Phone`, `Email`, `Password`, `DOB`, `iv`) VALUES (NULL, '$fname_hex', '$lname_hex', '$address_hex', '$ppsn_hex', '$phone_hex', '$email_hex', '$passwd_hex', '$dob_hex', '$iv_hex')";
-            $iv_hex = bin2hex($iv);
 
             if ($conn->query($sql) === TRUE)
             {

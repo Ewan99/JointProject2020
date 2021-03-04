@@ -5,12 +5,14 @@
 
 label
 {
+	font-family:"Helvetica";
 	padding-left:50px;
 	font-size:20px;
 }
 
 p
 {
+	font-family:"Helvetica";
 	font-size:30px;
 }
 

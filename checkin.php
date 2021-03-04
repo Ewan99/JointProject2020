@@ -157,7 +157,7 @@ if (isset($_POST['validate']))
 
   if($totalCorrect > 3)
   {
-    echo('<p style="font-size:25px;color:red;padding-left:370px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY and start self-isolating.  Your quiz results are being saved for contact tracing purposes...</p>');
+    echo('<p style="font-size:25px;color:red;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY and start self-isolating.  Your quiz results are being saved for contact tracing purposes...</p>');
     echo('<br><br><br><br><br><br>');
   }
   else
@@ -296,9 +296,6 @@ if (isset($_POST['validate']))
       </ol>
   		<input class = "submit" type="submit" formmethod="post" value="Submit" name="validate" />
     </form>
-    <br>
-
-    <p><h4 class="disclaimer">Disclaimer: By continuing to use this site, you agree that all data you input to this application can be stored for COVID Tracing Purposes. This data is encrypted during transmission and stays encrypted in storage to protect your privacy. <br> If you ever wish to review/ammend or delete this data, you can do so by viewing your profile    </h4></p>
 
   </div>
 

@@ -71,7 +71,6 @@ if (!$conn->query($sql) === TRUE)
   die('Error creating quizresults database: ' . $conn->error);
 }
 
-
 if (isset($_POST['validate']) || isset($_POST['view']))
 {
 	$sql = "SELECT `Client No.`, `PPSN`, `Password`, `iv` FROM clients";

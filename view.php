@@ -70,6 +70,64 @@ if (!$conn->query($sql) === TRUE)
   die('Error creating quizresults database: ' . $conn->error);
 }
 
+if (isset($_POST['changepass']))
+{
+  $sql = "SELECT `iv` FROM clients WHERE `Client No.` = $clientno";
+  $result = $conn->query($sql);
+  if (!$conn->query($sql) === TRUE)
+  {
+    echo('Error updating database: ' . $conn->error);
+  }
+  while($row = $result->fetch_assoc())
+  {
+    $iv = hex2bin($row['iv']);
+  }
+  $newpass = $conn -> real_escape_string($_POST['newpass']);
+  $newpass = openssl_encrypt($newpass, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+  $newpass_hex = bin2hex($newpass);
+  $sql = "UPDATE clients SET `Password` = '$newpass_hex'  where `Client No.` = $clientno;";
+  if (!$conn->query($sql) === TRUE)
+  {
+    echo('Error updating database: ' . $conn->error);
+  }
+  else {
+    echo('Success! Password has been updated');
+  }
+}
+
+if (isset($_POST['deluser']))
+{
+  $sql = "DELETE FROM `quizresults` WHERE `Client No.` = $clientno";
+  if (!$conn->query($sql) === TRUE)
+  {
+    echo('Error deleting from quizresults database: ' . $conn->error);
+  }
+  $sql = "DELETE FROM `clients` WHERE `Client No.` = $clientno";
+  if (!$conn->query($sql) === TRUE)
+  {
+    echo('Error deleting from clients database: ' . $conn->error);
+  }
+  else
+  {
+    echo ('<script>alert("Profile & Records deleted successfully! You will now return to the main page");document.location="index.php"</script>');
+  }
+}
+
+if (isset($_POST['delrecord']))
+{
+  echo ('<script>alert("Deleting Records...")</script>');
+  $sql = "DELETE FROM `quizresults` WHERE `Client No.` = $clientno";
+  if (!$conn->query($sql) === TRUE)
+  {
+    echo('Error creating quizresults database: ' . $conn->error);
+  }
+  else
+  {
+    echo ('<script>alert("Records deleted successfully! You will now return to the main page");document.location="index.php"</script>');
+  }
+
+}
+
 ?>
 <html>
 <head>
@@ -78,7 +136,7 @@ if (!$conn->query($sql) === TRUE)
 </style>
 </head>
   <body>
-    <input style="margin-left:41%" type="button" value="Home" onclick="location.href='index.php';" />
+    <input style="margin-left:46%" type="button" value="Home" onclick="location.href='index.php';" />
 
     <div class = "container">
       <h2>User Profile</h2>
@@ -148,16 +206,20 @@ if (!$conn->query($sql) === TRUE)
 
 
       echo "<tr><th>$fever</th><th>$achespains</th> <th>$cough</th><th>$breathing</th> <th>$smelltaste</th><th>$fatigue</th> <th>$locations</th><th>$doctor</th></tr>";
+
     }
+
   ?>
   </table>
-    <br><br><br>
-    <div class="inputbox"><label for="attempt">New Password:</label>
-       <input type="text" name="attempt" required id="attempt" />
-   </div>
-    <input id="passButton" type="submit" formmethod="post" value="Change Password" name="change" />
-
+</div>
+  <div class = "containerBottom">
+  <form id="form" method="POST" action="" required>
+    <label for="newpass">New Password:</label>
+    <input type="text" name="newpass" id="newpass" />
+    <input id = "bottomb" type="submit" formmethod="post" value="Change Password" name="changepass" />
+    <input id = "bottomb" type="submit" value="Delete Profile" name="deluser" />
+    <input id = "bottomb" type="submit" value="Delete Records" name="delrecord" />
+  </form>
     </div>
-
   </body>
 </html>

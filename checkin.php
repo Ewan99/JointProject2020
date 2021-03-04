@@ -2,8 +2,8 @@
 session_start();
 
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$username = 'admin';
+$password = '!Wa25Zg3H7Tjsg';
 $conn = new mysqli($host, $username, $password);
 
 $cipher = 'AES-128-CBC';
@@ -51,6 +51,7 @@ if (!$conn->query($sql) === TRUE)
 
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
+  `Entry` int(8) NOT NULL auto_increment,
   `Client No.` int(8) NOT NULL,
   `fever` varchar(250),
   `aches/pains` varchar(250),
@@ -61,7 +62,7 @@ $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   `locations` varchar(250),
   `doctor` varchar(250),
   `iv` varchar(250),
-   PRIMARY KEY  (`Client No.`)
+   PRIMARY KEY  (`Entry`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
@@ -122,49 +123,48 @@ if (isset($_POST['validate']))
     $totalCorrect++;
   }
 
+  $iv = random_bytes(16);
+
+  $q1 = $conn -> real_escape_string($_POST['q1']);
+
+  $q2 = $conn -> real_escape_string($_POST['q2']);
+
+  $q3 = $conn -> real_escape_string($_POST['q3']);
+
+  $q4 = $conn -> real_escape_string($_POST['q4']);
+
+  $q5 = $conn -> real_escape_string($_POST['q5']);
+
+  $q6 = $conn -> real_escape_string($_POST['q6']);
+
+  $q7 = $conn -> real_escape_string($_POST['q7']);
+
+  $q8 = $conn -> real_escape_string($_POST['q8']);
+
+  $enc_q7 = openssl_encrypt($q7, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+  $q7_hex = bin2hex($enc_q7);
+
+  $enc_q8 = openssl_encrypt($q8, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+  $q8_hex = bin2hex($enc_q8);
+
+  $iv_hex = bin2hex($iv);
+  $sql = "INSERT INTO quizresults (`Entry`, `Client No.`, `fever`, `aches/pains`, `cough`, `breathing`, `smell/taste`, `fatigue`, `locations`, `doctor`, `iv`) VALUES (NULL, '$id', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$q7_hex', '$q8_hex', '$iv_hex')";
+
+  if ($conn->query($sql) === FALSE)
+  {
+    die('There was an error while saving your data to the database Error:' . $conn->error );
+  }
+
   if($totalCorrect > 3)
   {
-    $iv = random_bytes(16);
-
-    $q1 = $conn -> real_escape_string($_POST['q1']);
-
-    $q2 = $conn -> real_escape_string($_POST['q2']);
-
-    $q3 = $conn -> real_escape_string($_POST['q3']);
-
-    $q4 = $conn -> real_escape_string($_POST['q4']);
-
-    $q5 = $conn -> real_escape_string($_POST['q5']);
-
-    $q6 = $conn -> real_escape_string($_POST['q6']);
-
-    $q7 = $conn -> real_escape_string($_POST['q7']);
-
-    $q8 = $conn -> real_escape_string($_POST['q8']);
-
-    $enc_q7 = openssl_encrypt($q7, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-    $q7_hex = bin2hex($enc_q7);
-
-    $enc_q8 = openssl_encrypt($q8, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-    $q8_hex = bin2hex($enc_q8);
-
-    $iv_hex = bin2hex($iv);
-    $sql = "INSERT INTO quizresults (`Client No.`, `fever`, `aches/pains`, `cough`, `breathing`, `smell/taste`, `fatigue`, `locations`, `doctor`, `iv`) VALUES ('$id', '$q1', '$q2', '$q3', '$q4', '$q5', '$q6', '$q7_hex', '$q8_hex', '$iv_hex')";
-    if ($conn->query($sql) === TRUE)
-    {
-      echo('<p style="font-size:25px;color:red;padding-left:370px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY.  Your results have been uploaded for contact tracing purposes...</p>');
-      echo('<br><br><br><br><br><br>');
-    }
-    else
-    {
-      echo('<p style="font-size:25px;color:red;padding-left:400px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY, isolate from all other people, and book an appointment to a COVID Testing Center as soon as possible.  However, an error prevented the upload of your results...   Error: </p>' . $conn->error);
-    }
+    echo('<p style="font-size:25px;color:red;padding-left:370px;">You have declared numerous symptoms involving COVID-19.  Please return home IMMEDIATELY and start self-isolating.  Your quiz results are being saved for contact tracing purposes...</p>');
+    echo('<br><br><br><br><br><br>');
   }
   else
   {
-    echo ('<script>alert("You are not showing significant signs of COVID-19.  Your appointment has been confirmed");document.location="index.php"</script>');
-
+    echo ('<script>alert("You are not showing significant signs of COVID-19.  Your appointment has been confirmed!  NOTE: Your Quiz Results will be saved for COVID Tracing Purposes");document.location="index.php"</script>');
   }
+
 }
 ?>
 
@@ -296,6 +296,9 @@ if (isset($_POST['validate']))
       </ol>
   		<input class = "submit" type="submit" formmethod="post" value="Submit" name="validate" />
     </form>
+    <br>
+
+    <p><h4 class="disclaimer">Disclaimer: By continuing to use this site, you agree that all data you input to this application can be stored for COVID Tracing Purposes. This data is encrypted during transmission and stays encrypted in storage to protect your privacy. <br> If you ever wish to review/ammend or delete this data, you can do so by viewing your profile    </h4></p>
 
   </div>
 

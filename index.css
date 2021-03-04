@@ -58,3 +58,9 @@ h4
 		background-color:#dfdfdf;
 		border-bottom:3px solid black;
 	}
+
+	h4.disclaimer
+	{
+	border:3px solid black;
+	font-family:"Helvetica";
+	}

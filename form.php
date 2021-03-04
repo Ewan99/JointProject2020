@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$username = 'admin';
+$password = '!Wa25Zg3H7Tjsg';
 $conn = new mysqli($host, $username, $password);
 
 $cipher = 'AES-128-CBC';
@@ -45,6 +45,7 @@ if (!$conn->query($sql) === TRUE)
 
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
+  `Entry` int(8) NOT NULL auto_increment,
   `Client No.` int(8) NOT NULL,
   `fever` varchar(250),
   `aches/pains` varchar(250),
@@ -55,7 +56,7 @@ $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   `locations` varchar(250),
   `doctor` varchar(250),
   `iv` varchar(250),
-   PRIMARY KEY  (`Client No.`)
+   PRIMARY KEY  (`Entry`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
@@ -92,6 +93,7 @@ if (!$conn->query($sql) === TRUE)
 
     <?php
     if (isset($_POST['new-record'])) {
+      $found = "False";
       $iv = random_bytes(16);
 
       $enc_fname = $conn -> real_escape_string($_POST['firstname']);
@@ -106,7 +108,7 @@ if (!$conn->query($sql) === TRUE)
       $enc_address = openssl_encrypt($enc_address, $cipher, $key, OPENSSL_RAW_DATA, $iv);
       $address_hex = bin2hex($enc_address);
 
-      $enc_ppsn = $conn -> real_escape_string($_POST['medNum']);
+      $enc_ppsn = $conn -> real_escape_string($_POST['PPSNum']);
       $enc_ppsn = openssl_encrypt($enc_ppsn, $cipher, $key, OPENSSL_RAW_DATA, $iv);
       $ppsn_hex = bin2hex($enc_ppsn);
 
@@ -126,18 +128,52 @@ if (!$conn->query($sql) === TRUE)
       $enc_dob = openssl_encrypt($enc_dob, $cipher, $key, OPENSSL_RAW_DATA, $iv);
       $dob_hex = bin2hex($enc_dob);
 
-      $iv_hex = bin2hex($iv);
-      $sql = "INSERT INTO clients (`Client No.`, `First Name`, `Last Name`, `Address`, `PPSN`, `Phone`, `Email`, `Password`, `DOB`, `iv`) VALUES (NULL, '$fname_hex', '$lname_hex', '$address_hex', '$ppsn_hex', '$phone_hex', '$email_hex', '$passwd_hex', '$dob_hex', '$iv_hex')";
-      if ($conn->query($sql) === TRUE)
+      $sql = "SELECT `PPSN`,`iv`  FROM clients";
+      if (!$result = $conn->query($sql))
       {
-        echo ('<script>alert("Profile created successfully! You will now return to the main page");document.location="index.php"</script>');
+        die('Error while checking database for duplicates... ' . $conn->error);
       }
       else
       {
-        die('There was an error creating your record.  Please try again!   Error: ' . $conn->error);
-      }
+        if ($result->num_rows > 0)
+        {
+          while($row = $result->fetch_assoc())
+          {
+            $deciv = hex2bin($row['iv']);
+            $ppsn = hex2bin($row['PPSN']);
+            $ppsn = openssl_decrypt($ppsn, $cipher, $key, OPENSSL_RAW_DATA, $deciv);
 
+            echo('Comparing ' . $_POST['PPSNum'] . " with " . $ppsn);
+            echo('help');
+            if($_POST['PPSNum'] == $ppsn)
+            {
+              $found = "True";
+              echo('Match Found');
+            }
+            echo('End of while');
+          }
+        }
+        if($found == "True")
+        {
+              echo ('<script>alert("ERROR: A profile with the same PPS Number already exists");document.location="form.php"</script>');
+        }
+        else
+        {
+            $sql = "INSERT INTO clients (`Client No.`, `First Name`, `Last Name`, `Address`, `PPSN`, `Phone`, `Email`, `Password`, `DOB`, `iv`) VALUES (NULL, '$fname_hex', '$lname_hex', '$address_hex', '$ppsn_hex', '$phone_hex', '$email_hex', '$passwd_hex', '$dob_hex', '$iv_hex')";
+            $iv_hex = bin2hex($iv);
+
+            if ($conn->query($sql) === TRUE)
+            {
+              echo ('<script>alert("Profile created successfully! You will now return to the main page");document.location="index.php"</script>');
+            }
+            else
+            {
+              die('There was an error creating your record.  Please try again!   Error: ' . $conn->error);
+            }
+        }
+      }
     }
+
     ?>
     <input class="myButton" type="button" value="Home" onclick="location.href='index.php';" />
     <div class = "container">
@@ -157,8 +193,8 @@ if (!$conn->query($sql) === TRUE)
   	        <input title="Address must only contain the following: a-Z , - , 0-9 , . , , )" type="text" name="address" required id="Address" pattern="[a-zA-Z|,|\s|.|0-9]+"/>
         </div>
 
-  	     <div class="inputbox"><label for="MedNum">PPS Number:</label>
-  	        <input type="text" title="Must contain 7 digits followed by one or two characters" name="medNum" required id="MedNum" pattern="(\d{7})([A-Z]{1,2})"/>
+  	     <div class="inputbox"><label for="PPSNum">PPS Number:</label>
+  	        <input type="text" title="Must contain 7 digits followed by one or two characters" name="PPSNum" required id="PPSNum" pattern="(\d{7})([A-Z]{1,2})"/>
         </div>
 
   	    <div class="inputbox"><label for="PhoneNum">Phone Number:</label>
@@ -185,6 +221,11 @@ if (!$conn->query($sql) === TRUE)
   	       <input type="submit" formmethod="post" value="Submit Form" name="new-record" />
   	    </div>
       </form>
+
+      <br>
+
+      <p><h4 class="disclaimer">Disclaimer: By continuing to use this site, you agree that all data you input to this application can be stored for COVID Tracing Purposes. This data is encrypted during transmission and stays encrypted in storage to protect your privacy. <br> If you ever wish to review/ammend or delete this data, you can do so by viewing your profile    </h4></p>
+
     </div>
 
   </body>

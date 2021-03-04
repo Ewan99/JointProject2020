@@ -1,12 +1,13 @@
 <?php
 $SESSION_lifetime = 86400;
 
+
 session_start();
 
 
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$username = 'admin';
+$password = '!Wa25Zg3H7Tjsg';
 $conn = new mysqli($host, $username, $password);
 
 $cipher = 'AES-128-CBC';
@@ -51,6 +52,7 @@ if (!$conn->query($sql) === TRUE)
 
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
+  `Entry` int(8) NOT NULL auto_increment,
   `Client No.` int(8) NOT NULL,
   `fever` varchar(250),
   `aches/pains` varchar(250),
@@ -61,7 +63,7 @@ $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   `locations` varchar(250),
   `doctor` varchar(250),
   `iv` varchar(250),
-   PRIMARY KEY  (`Client No.`)
+   PRIMARY KEY  (`Entry`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
@@ -136,12 +138,14 @@ if (isset($_POST['validate']) || isset($_POST['view']))
 
 		<input type="submit" formmethod="post" value="Check-in" name="validate" />
     <input type="submit" formmethod="post" value="View Profile" name="view" />
+    <input type="hidden" name="token" value=<?php random_bytes(16); ?>/>
   </form>
 
 	<br><br>
 	<h3 style="padding-left:32%;">New user? Register below...</h3>
 	<input type="button" value="Register Profile" onclick="location.href='form.php';" />
-
+<br>
+<p><h4 class="disclaimer">Disclaimer: By continuing to use this site, you agree that all data you input to this application can be stored for COVID Tracing Purposes. This data is encrypted during transmission and stays encrypted in storage to protect your privacy. <br> If you ever wish to review/ammend or delete this data, you can do so by viewing your profile    </h4></p>
 </div>
 
 </body>

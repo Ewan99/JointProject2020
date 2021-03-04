@@ -107,3 +107,18 @@ h4.header
     font-family:"Helvetica";
     margin: 0 0 1px 0;
   }
+
+	h4.disclaimer
+	{
+		font-family:"Helvetica";
+		font-size:20px;
+		margin: auto;
+		width: 100%;
+		text-align:center;
+		color:red;
+		background-color:#dfdfdf;
+		border-bottom:3px solid black;
+		color:red;
+		border:3px solid black;
+		font-family:"Helvetica";
+	}

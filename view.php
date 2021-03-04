@@ -2,8 +2,8 @@
 session_start();
 
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$username = 'admin';
+$password = '!Wa25Zg3H7Tjsg';
 $conn = new mysqli($host, $username, $password);
 
 $cipher = 'AES-128-CBC';
@@ -51,6 +51,7 @@ if (!$conn->query($sql) === TRUE)
 
 $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   (
+  `Entry` int(8) NOT NULL auto_increment,
   `Client No.` int(8) NOT NULL,
   `fever` varchar(250),
   `aches/pains` varchar(250),
@@ -61,7 +62,7 @@ $sql = ' CREATE TABLE IF NOT EXISTS `quizresults`
   `locations` varchar(250),
   `doctor` varchar(250),
   `iv` varchar(250),
-   PRIMARY KEY  (`Client No.`)
+   PRIMARY KEY  (`Entry`)
   ); ';
 
 if (!$conn->query($sql) === TRUE)
@@ -155,6 +156,7 @@ if (!$conn->query($sql) === TRUE)
        <input type="text" name="attempt" required id="attempt" />
    </div>
     <input id="passButton" type="submit" formmethod="post" value="Change Password" name="change" />
+
     </div>
 
   </body>
